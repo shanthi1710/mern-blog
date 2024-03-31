@@ -2,7 +2,7 @@ import express from "express";
 import connectDB from "./db/index.js"
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-
+import userRouter from "./routes/user.route.js";
 
 const app = express();
 app.use(express.json());
@@ -23,3 +23,5 @@ connectDB()
     console.log("MONGODB connection failed",err);
 });
 
+
+app.use("/api/users",userRouter);
