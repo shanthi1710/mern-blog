@@ -1,19 +1,23 @@
 import {ApiError} from "../utils/ApiError.js";
 import {ApiResponse} from "../utils/ApiResponse.js";
 import {asyncHandler} from "../utils/asyncHandler.js";
+import User from "../models/user.model.js";
 
-export const test = (req,res)=>{
-    res.send("Hello Word!!!");
-}
-
-export const register = asyncHandler(async(req,res)=>{
+export const signup = asyncHandler(async(req,res)=>{
     const {username,email,password} = req.body
 
     if([username,email,password].some((field)=>field?.trim() === "")){
         throw new ApiError(400,"All fields are required")
     }
 
+    const newUser = new User({
+        username,
+        email,
+        password
+    })
+    await newUser.save();
+     
     return res.status(201).json(
-        new ApiResponse(200, createdUser, "User registered Successfully")
+        new ApiResponse(201, newUser, "User registered Successfully")
     )
 })
