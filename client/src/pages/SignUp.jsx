@@ -1,14 +1,10 @@
-
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-
-
 export default function SignUp() {
-
   const [formData, setFormData] = useState({});
-  
+
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -109,12 +105,12 @@ export default function SignUp() {
             <Link to="/sign-in" className="text-blue-500">
               Sign In
             </Link>
-            {errorMessage && (
-              <Alert className="mt-5" color="failure">
-                {errorMessage}
-              </Alert>
-            )}
           </div>
+          {errorMessage && (
+            <Alert className="mt-5" color="failure">
+              {errorMessage}
+            </Alert>
+          )}
         </div>
       </div>
     </div>
