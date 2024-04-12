@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js"
+
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
@@ -26,6 +27,7 @@ connectDB()
 
 app.use("/api/users",userRouter);
 app.use("/api/auth",authRouter);
+
 
 
 

@@ -65,9 +65,11 @@ export const signin = asyncHandler(async (req, res, next) => {
     if (!isPasswordValid) {
       throw new ApiError(401, "Invalid credentials");
     }
+
     const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(
       validUser._id
     );
+
     const loggedInUser = await User.findById(validUser._id).select(
       "-password -refreshToken -__v"
     );
@@ -75,6 +77,7 @@ export const signin = asyncHandler(async (req, res, next) => {
       httpOnly: true,
       secure: true,
     };
+    
     return res
       .status(200)
       .cookie("accessToken", accessToken,options)
