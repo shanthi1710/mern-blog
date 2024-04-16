@@ -77,18 +77,11 @@ export const signin = asyncHandler(async (req, res, next) => {
       httpOnly: true,
       secure: true,
     };
-
     return res
       .status(200)
       .cookie("accessToken", accessToken, options)
       .cookie("refreshToken", refreshToken, options)
-      .json(
-        new ApiResponse(
-          200,
-          { loggedInUser, accessToken, refreshToken },
-          "User logged in successfully"
-        )
-      );
+      .json(loggedInUser);
   } catch (error) {
     next(error);
   }
@@ -104,15 +97,15 @@ export const google = asyncHandler(async (req, res, next) => {
       const loggedInUser = await User.findById(user._id).select(
         "-password -refreshToken -__v"
       );
+      const options = {
+        httpOnly: true,
+        secure: true,
+      };
       return res
         .status(200)
-        .json(
-          new ApiResponse(
-            200,
-            { loggedInUser, accessToken, refreshToken },
-            "User logged in successfully"
-          )
-        );
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json(loggedInUser);
     } else {
       const generatedPassword =
         Math.random().toString(36).slice(-8) +
@@ -127,19 +120,20 @@ export const google = asyncHandler(async (req, res, next) => {
       });
 
       await newUser.save();
-      const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(newUser._id);
+      const { accessToken, refreshToken } =
+        await generateAccessAndRefereshTokens(newUser._id);
       const loggedInUser = await User.findById(user._id).select(
         "-password -refreshToken -__v"
       );
+      const options = {
+        httpOnly: true,
+        secure: true,
+      };
       return res
-        .status(201)
-        .json(
-          new ApiResponse(201, {
-            loggedInUser: loggedInUser,
-            accessToken,
-            refreshToken,
-          })
-        );
+        .status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json(loggedInUser);
     }
   } catch (error) {
     next(error);
