@@ -77,11 +77,11 @@ export const signin = asyncHandler(async (req, res, next) => {
       httpOnly: true,
       secure: true,
     };
-    
+
     return res
       .status(200)
-      .cookie("accessToken", accessToken,options)
-      .cookie("refreshToken", refreshToken,options)
+      .cookie("accessToken", accessToken, options)
+      .cookie("refreshToken", refreshToken, options)
       .json(
         new ApiResponse(
           200,
@@ -89,6 +89,58 @@ export const signin = asyncHandler(async (req, res, next) => {
           "User logged in successfully"
         )
       );
+  } catch (error) {
+    next(error);
+  }
+});
+
+export const google = asyncHandler(async (req, res, next) => {
+  const { email, name, googlePhotoUrl } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (user) {
+      const { accessToken, refreshToken } =
+        await generateAccessAndRefereshTokens(user._id);
+      const loggedInUser = await User.findById(user._id).select(
+        "-password -refreshToken -__v"
+      );
+      return res
+        .status(200)
+        .json(
+          new ApiResponse(
+            200,
+            { loggedInUser, accessToken, refreshToken },
+            "User logged in successfully"
+          )
+        );
+    } else {
+      const generatedPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+      const newUser = new User({
+        username:
+          name.toLowerCase().split(" ").join("") +
+          Math.random().toString(9).slice(-4),
+        email,
+        password: generatedPassword,
+        profilePicture: googlePhotoUrl,
+      });
+
+      await newUser.save();
+      const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(newUser._id);
+      const loggedInUser = await User.findById(user._id).select(
+        "-password -refreshToken -__v"
+      );
+      return res
+        .status(201)
+        .json(
+          new ApiResponse(201, {
+            loggedInUser: loggedInUser,
+            accessToken,
+            refreshToken,
+          })
+        );
+    }
   } catch (error) {
     next(error);
   }
