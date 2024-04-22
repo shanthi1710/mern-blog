@@ -63,3 +63,15 @@ export const deleteUser = asyncHandler(async(req,res)=>{
     }
 
 }) 
+
+export const signOut = asyncHandler(async(req,res)=>{
+  try {
+    res
+    .clearCookie("accessToken")
+    .status(200)
+    .json("User has been signed out")
+
+  } catch (error) {
+    next(error)
+  }
+})
