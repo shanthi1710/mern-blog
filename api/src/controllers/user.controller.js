@@ -49,3 +49,17 @@ export const updateUser = asyncHandler(async (req, res) => {
     next(error)
   }
 });
+
+
+export const deleteUser = asyncHandler(async(req,res)=>{
+    if(req.user._id !== req.params.userId){
+      throw new ApiError(403,"You are not allowed to delete this user")
+    }
+    try {
+      await User.findByIdAndDelete(req.params.userId);
+      res.status(200).json("User has been deleted")
+    } catch (error) {
+      next(error)
+    }
+
+}) 
