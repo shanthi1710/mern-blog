@@ -1,7 +1,6 @@
 import { ApiError } from "../utils/ApiError.js";
 import User from "../models/user.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import bcryptjs from 'bcryptjs';
 export const test = (req, res) => {
   res.send("Hello Word!!!");
 };

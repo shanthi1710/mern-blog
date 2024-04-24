@@ -1,13 +1,12 @@
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-
+ 
 import User from "../models/user.model.js";
 
 const generateAccessAndRefereshTokens = async (userId) => {
   try {
     const user = await User.findById(userId);
-    user.isAdmin = true;
     const accessToken = user.generateAccessToken();
     const refreshToken = user.generateRefreshToken();
 
