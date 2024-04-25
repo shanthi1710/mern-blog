@@ -7,6 +7,7 @@ import User from "../models/user.model.js";
 const generateAccessAndRefereshTokens = async (userId) => {
   try {
     const user = await User.findById(userId);
+    //user.isAdmin = true;
     const accessToken = user.generateAccessToken();
     const refreshToken = user.generateRefreshToken();
 

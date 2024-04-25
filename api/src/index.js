@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js"
+import postRouter from "./routes/post.router.js"
 import path from 'path';
 
 const __dirname = path.resolve();
@@ -31,6 +32,7 @@ connectDB()
 
 app.use("/api/user",userRouter);
 app.use("/api/auth",authRouter);
+app.use("/api/post",postRouter);
 
 
 app.use(express.static(path.join(__dirname, '/client/dist')));
