@@ -31,7 +31,7 @@ export const updateUser = asyncHandler(async (req, res) => {
   }
   try {
     const updatedUser = await User.findByIdAndUpdate(
-        req.params.userId,
+      req.params.userId,
       {
         $set: {
           username: req.body.username,
@@ -41,36 +41,33 @@ export const updateUser = asyncHandler(async (req, res) => {
         },
       },
       { new: true }
-    
     ).select("-password -__v");
     res.status(200).json(updatedUser);
   } catch (error) {
-    next(error)
+    next(error);
   }
 });
 
+export const deleteUser = asyncHandler(async (req, res) => {
+  if (req.user._id !== req.params.userId) {
+    throw new ApiError(403, "You are not allowed to delete this user");
+  }
+  try {
+    await User.findByIdAndDelete(req.params.userId);
+    res.status(200).json("User has been deleted");
+  } catch (error) {
+    next(error);
+  }
+});
 
-export const deleteUser = asyncHandler(async(req,res)=>{
-    if(req.user._id !== req.params.userId){
-      throw new ApiError(403,"You are not allowed to delete this user")
-    }
-    try {
-      await User.findByIdAndDelete(req.params.userId);
-      res.status(200).json("User has been deleted")
-    } catch (error) {
-      next(error)
-    }
-
-}) 
-
-export const signOut = asyncHandler(async(req,res)=>{
+export const signOut = asyncHandler(async (req, res) => {
   try {
     res
-    .clearCookie("accessToken")
-    .status(200)
-    .json("User has been signed out")
-
+      .clearCookie("accessToken")
+      .clearCookie("refreshToken")
+      .status(200)
+      .json("User has been signed out");
   } catch (error) {
-    next(error)
+    next(error);
   }
-})
+});
