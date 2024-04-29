@@ -3,7 +3,6 @@ import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const create = asyncHandler(async (req, res, next) => {
-   
   if (!req.user.isAdmin) {
     throw new ApiError(401, "You are not authorized to create a post");
   }
@@ -16,17 +15,17 @@ export const create = asyncHandler(async (req, res, next) => {
     .toLowerCase()
     .replace(/[^a-zA-Z0-9-]/g, "");
 
-    const newPost = new Post({
-        ...req.body,
-        slug,
-        userId: req.user._id,
-    }); 
-    try {
-        const savedPost = await newPost.save();
-        return res.status(201).json(savedPost);
-    } catch (error) {
-        next(error);
-    }
+  const newPost = new Post({
+    ...req.body,
+    slug,
+    userId: req.user._id,
+  });
+  try {
+    const savedPost = await newPost.save();
+    return res.status(201).json(savedPost);
+  } catch (error) {
+    next(error);
+  }
 });
 
 export const getposts = asyncHandler(async (req, res) => {
@@ -69,6 +68,18 @@ export const getposts = asyncHandler(async (req, res) => {
       totalPosts,
       lastMonthPosts,
     });
+  } catch (error) {
+    next(error);
+  }
+});
+
+export const deletepost = asyncHandler(async (req, res, next) => {
+  if (!req.user.isAdmin || req.user._id !== req.params.userId) {
+    throw new ApiError(401, "You are not authorized to delete a post");
+  }
+  try {
+    await Post.findByIdAndDelete(req.params.postId);
+    res.status(200).json("Post has been deleted");
   } catch (error) {
     next(error);
   }
