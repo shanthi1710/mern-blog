@@ -7,6 +7,7 @@ import authRouter from "./routes/auth.route.js"
 import postRouter from "./routes/post.router.js"
 import path from 'path';
 
+
 const __dirname = path.resolve();
 
 
@@ -43,8 +44,7 @@ app.get('*', (req, res) => {
 
 
 
-
-app.use((err,req,res,next)=>{
+ app.use((err,req,res,next)=>{
     const statusCode = err.statusCode || 500;
     const message = err.message || 'Internal Server Error';
 
