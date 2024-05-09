@@ -74,7 +74,7 @@ export const signOut = asyncHandler(async (req, res) => {
 
 
 export const getUsers = asyncHandler(async (req, res, next) => {
-  if (!req.user.isAdmin) {
+  if (!req.user.isAdmin && req.user._id !== req.params.userId) {
     throw new ApiError(403, 'You are not allowed to see all users');
   }
   try {
