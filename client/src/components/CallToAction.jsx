@@ -17,7 +17,7 @@ export default function CallToAction() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Shathi1710
+            Shanthi1710
           </a>
         </Button>
       </div>
